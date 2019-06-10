@@ -9,8 +9,9 @@ Stepper.prototype.isStepCountingAvailable = function (onSuccess, onError) {
     exec(onSuccess, onError, "Stepper", "isStepCountingAvailable", []);
 };
 
-Stepper.prototype.startStepperUpdates = function (onSuccess, onError) {
-    exec(onSuccess, onError, "Stepper", "startStepperUpdates", []);
+Stepper.prototype.startStepperUpdates = function (offset, onSuccess, onError) {
+    offset = parseInt(offset) || 0;
+    exec(onSuccess, onError, "Stepper", "startStepperUpdates", [offset]);
 };
 
 Stepper.prototype.stopStepperUpdates = function (onSuccess, onError) {

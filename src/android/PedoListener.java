@@ -50,7 +50,7 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
 
   private int status;
 
-  private int todayOffset, total_start, goal, since_boot, total_days;
+  private int startOffset = 0, todayOffset, total_start, goal, since_boot, total_days;
   public final static NumberFormat formatter = NumberFormat.getInstance(Locale.getDefault());
 
   private SensorManager sensorManager;      // Sensor manager
@@ -89,6 +89,13 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
     this.callbackContext = callbackContext;
 
     if (action.equals("startStepperUpdates")) {
+      int offset = 0;
+      try {
+        this.startOffset = args.getInt(0);
+      }
+      catch (JSONException e) {
+        e.printStackTrace();
+      }
       this.start();
       return true;
     }
@@ -276,6 +283,9 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
     if ((this.status == PedoListener.RUNNING) || (this.status == PedoListener.STARTING)) {
       return;
     }
+
+    getSharedPreferences("pedometer", Context.MODE_PRIVATE).edit()
+            .putInt("startOffset", this.startOffset).commit();
 
     if (Build.VERSION.SDK_INT >= 26) {
       API26Wrapper.startForegroundService(getActivity(),
