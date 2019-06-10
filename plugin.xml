@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-stepper" version="0.1.1">
+    <name>Stepper</name>
+    <author>Chubutkin Alexander</author>
+    <description>Lightweight pedometer Cordova/Phonegap plugin for Android using the hardware step sensor, with notifications.</description>
+    <keywords>cordova, core motion, pedometer, steps, distance, pedestrian</keywords>
+    <license>MIT</license>
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines>
+    <js-module src="www/stepper.js" name="Stepper">
+        <clobbers target="stepper" />
+    </js-module>
+    <platform name="android">
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <receiver android:name="org.apache.cordova.stepper.BootReceiver">
+                <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <category android:name="android.intent.category.DEFAULT" />
+                </intent-filter>
+            </receiver>
+            <receiver android:name="org.apache.cordova.stepper.AppUpdatedReceiver">
+                <intent-filter>
+                    <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                </intent-filter>
+            </receiver>
+            <service android:name="org.apache.cordova.stepper.SensorListener"/>
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+            <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+            <uses-feature android:name="android.hardware.sensor.stepcounter" />
+        </config-file>
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="Stepper">
+                <param name="android-package" value="org.apache.cordova.stepper.PedoListener" />
+            </feature>
+        </config-file>
+        <source-file src="src/android/PedoListener.java" target-dir="src/org/apache/cordova/stepper" />
+        <source-file src="src/android/AppUpdatedReceiver.java" target-dir="src/org/apache/cordova/stepper" />
+        <source-file src="src/android/BootReceiver.java" target-dir="src/org/apache/cordova/stepper" />
+        <source-file src="src/android/Database.java" target-dir="src/org/apache/cordova/stepper" />
+        <source-file src="src/android/SensorListener.java" target-dir="src/org/apache/cordova/stepper" />
+        <source-file src="src/android/ShutdownRecevier.java" target-dir="src/org/apache/cordova/stepper" />
+        <source-file src="src/android/util/API23Wrapper.java" target-dir="src/org/apache/cordova/stepper/util" />
+        <source-file src="src/android/util/API26Wrapper.java" target-dir="src/org/apache/cordova/stepper/util" />
+        <source-file src="src/android/util/Logger.java" target-dir="src/org/apache/cordova/stepper/util" />
+        <source-file src="src/android/util/Util.java" target-dir="src/org/apache/cordova/stepper/util" />
+        <source-file src="src/android/res/drawable/ic_footsteps_silhouette_variant.xml" target-dir="res/drawable" />
+    </platform>
+</plugin>
