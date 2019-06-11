@@ -15,7 +15,7 @@ Soon!
 #### Latest version from GitHub
 
 ```
-cordova plugin add https://github.com/achubutkin/cordova-plugin-stepper@beta-0.1.1
+cordova plugin add https://github.com/achubutkin/cordova-plugin-stepper
 ```
 
 ## Platform and device support
