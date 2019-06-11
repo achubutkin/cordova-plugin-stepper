@@ -284,7 +284,7 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
       return;
     }
 
-    getSharedPreferences("pedometer", Context.MODE_PRIVATE).edit()
+    this.cordova.getContext().getSharedPreferences("pedometer", Context.MODE_PRIVATE).edit()
             .putInt("startOffset", this.startOffset).commit();
 
     if (Build.VERSION.SDK_INT >= 26) {
