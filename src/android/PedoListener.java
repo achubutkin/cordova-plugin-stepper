@@ -46,6 +46,8 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
 
   public static String PEDOMETER_IS_COUNTING_PREF_STRING = "PedometerIsCountingPrefString";
   public static String STEPS_TO_GO_PREF_STRING = "StepsToGoPrefString";
+  public static String YOUR_PROGRESS_PREF_STRING = "YourProgressPrefString";
+  public static String GOAL_REACHED_PREF_STRING = "GoalReachedPrefString";
   public static String GOAL_PREF_INT = "GoalPrefInt";
 
   private int status;
@@ -133,11 +135,15 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
   private void setNotificationLocalizedStrings(JSONArray args) {
     String pedometerIsCounting;
     String stepsToGo;
+    String yourProgress;
+    String goalReached;
 
     try {
       JSONObject joStrings = args.getJSONObject(0);
       pedometerIsCounting = joStrings.getString("pedometerIsCounting");
       stepsToGo = joStrings.getString("stepsToGo");
+      yourProgress = joStrings.getString("yourProgress");
+      goalReached = joStrings.getString("goalReached");
     }
     catch (JSONException e) {
       e.printStackTrace();
@@ -152,7 +158,13 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
     if (stepsToGo != null) {
       prefs.edit().putString(PedoListener.STEPS_TO_GO_PREF_STRING, stepsToGo).apply();
     }
-  }
+    if (yourProgress != null) {
+      prefs.edit().putString(PedoListener.YOUR_PROGRESS_PREF_STRING, yourProgress).apply();
+    }
+    if (goalReached != null) {
+      prefs.edit().putString(PedoListener.GOAL_REACHED_PREF_STRING, goalReached).apply();
+    }
+   }
 
   private void setGoal(JSONArray args) {
     try {

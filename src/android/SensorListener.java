@@ -47,6 +47,8 @@ public class SensorListener extends Service implements SensorEventListener {
 
   private static String pedometerIsCounting = "Pedometer is counting";
   private static String stepsToGo = "%s steps to go";
+  private static String yourProgress = "Your progress will be shown here soon";
+  private static String goalReached = "Goal reached! %s steps and counting";
 
   private static int notificationIconId = 0;
 
@@ -142,8 +144,11 @@ public class SensorListener extends Service implements SensorEventListener {
     super.onCreate();
 
     SharedPreferences prefs = this.getSharedPreferences("pedometer", Context.MODE_PRIVATE);
+
     pedometerIsCounting = prefs.getString(PedoListener.PEDOMETER_IS_COUNTING_PREF_STRING, pedometerIsCounting);
     stepsToGo = prefs.getString(PedoListener.STEPS_TO_GO_PREF_STRING, stepsToGo);
+    yourProgress = prefs.getString(PedoListener.YOUR_PROGRESS_PREF_STRING, yourProgress);
+    goalReached = prefs.getString(PedoListener.GOAL_REACHED_PREF_STRING, goalReached);
   }
 
   private static int getNotificationIconId(Context context) {
@@ -190,14 +195,14 @@ public class SensorListener extends Service implements SensorEventListener {
       if (today_offset == Integer.MIN_VALUE) today_offset = -steps;
       notificationBuilder.setProgress(goal, today_offset + steps, false).setContentText(
         today_offset + steps >= goal ?
-          String.format("Goal reached! %s steps and counting",
+          String.format(goalReached,
             NumberFormat.getInstance(Locale.getDefault())
               .format((today_offset + steps))) :
           String.format(SensorListener.stepsToGo,
             NumberFormat.getInstance(Locale.getDefault())
               .format((goal - today_offset - steps))));
     } else { // still no step value?
-      notificationBuilder.setContentText("Your progress will be shown here soon");
+      notificationBuilder.setContentText(yourProgress);
     }
 
     PackageManager packageManager = context.getPackageManager();
