@@ -202,7 +202,7 @@ public class SensorListener extends Service implements SensorEventListener {
       notificationIconId = getNotificationIconId(context);
     }
 
-    notificationBuilder.setPriority(Notification.PRIORITY_MIN).setShowWhen(false)
+    notificationBuilder.setPriority(Notification.PRIORITY_DEFAULT).setShowWhen(false)
       .setContentTitle(prefs.getString(PedoListener.PEDOMETER_IS_COUNTING_TEXT, "Pedometer is counting"))
       .setContentIntent(contentIntent).setSmallIcon(notificationIconId)
       .setOngoing(true);
