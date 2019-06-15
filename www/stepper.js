@@ -1,3 +1,4 @@
+cordova.define("cordova-plugin-stepper.Stepper", function(require, exports, module) {
 
 var exec = require("cordova/exec");
 
@@ -9,9 +10,10 @@ Stepper.prototype.isStepCountingAvailable = function (onSuccess, onError) {
     exec(onSuccess, onError, "Stepper", "isStepCountingAvailable", []);
 };
 
-Stepper.prototype.startStepperUpdates = function (offset, onSuccess, onError) {
+Stepper.prototype.startStepperUpdates = function (offset, onSuccess, onError, options) {
     offset = parseInt(offset) || 0;
-    exec(onSuccess, onError, "Stepper", "startStepperUpdates", [offset]);
+    options = options || {};
+    exec(onSuccess, onError, "Stepper", "startStepperUpdates", [offset, options]);
 };
 
 Stepper.prototype.stopStepperUpdates = function (onSuccess, onError) {
@@ -60,3 +62,5 @@ Stepper.prototype.setGoal = function (num, onSuccess, onError) {
 
 module.exports = new Stepper();
 
+
+});

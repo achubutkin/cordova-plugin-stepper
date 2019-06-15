@@ -44,11 +44,12 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
 
   public static int DEFAULT_GOAL = 1000;
 
-  public static String PEDOMETER_IS_COUNTING_PREF_STRING = "PedometerIsCountingPrefString";
-  public static String STEPS_TO_GO_PREF_STRING = "StepsToGoPrefString";
-  public static String YOUR_PROGRESS_PREF_STRING = "YourProgressPrefString";
-  public static String GOAL_REACHED_PREF_STRING = "GoalReachedPrefString";
   public static String GOAL_PREF_INT = "GoalPrefInt";
+
+  public static String PEDOMETER_IS_COUNTING_TEXT = "pedometerIsCountingText";
+  public static String PEDOMETER_STEPS_TO_GO_FORMAT_TEXT = "pedometerStepsToGoFormatText";
+  public static String PEDOMETER_YOUR_PROGRESS_FORMAT_TEXT = "pedometerYourProgressFormatText";
+  public static String PEDOMETER_GOAL_REACHED_FORMAT_TEXT = "pedometerGoalReachedFormatText";
 
   private int status;
 
@@ -87,49 +88,36 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
    * @param callbackContext the callback context used when calling back into JavaScript.
    * @return whether the action was valid.
    */
-  public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
+  public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
     this.callbackContext = callbackContext;
 
     if (action.equals("startStepperUpdates")) {
-      int offset = 0;
-      try {
-        this.startOffset = args.getInt(0);
-      }
-      catch (JSONException e) {
-        e.printStackTrace();
-      }
-      this.start();
-      return true;
+      start(args);
     }
     else if (action.equals("stopStepperUpdates")) {
-      this.stop();
-      return true;
+      stop();
     }
     else if (action.equals("setNotificationLocalizedStrings")) {
-      this.setNotificationLocalizedStrings(args);
+      setNotificationLocalizedStrings(args);
       callbackContext.success();
-      return true;
     }
     else if (action.equals("setGoal")) {
-      this.setGoal(args);
+      setGoal(args);
       callbackContext.success();
-      return true;
     }
     else if (action.equals("getSteps")) {
-      this.getSteps(args);
-      return true;
+      getSteps(args);
     }
     else if (action.equals("getStepsByPeriod")) {
-      this.getStepsByPeriod(args);
-      return true;
+      getStepsByPeriod(args);
     }
     else if (action.equals("getLastEntries")) {
-      this.getLastEntries(args);
-      return true;
+      getLastEntries(args);
     }
     else {
       return false;
     }
+    return true;
   }
 
   private void setNotificationLocalizedStrings(JSONArray args) {
@@ -150,34 +138,34 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
       return;
     }
 
-    SharedPreferences prefs = this.cordova.getContext().getSharedPreferences("pedometer", Context.MODE_PRIVATE);
+    SharedPreferences prefs = cordova.getContext().getSharedPreferences("pedometer", Context.MODE_PRIVATE);
 
     if (pedometerIsCounting != null) {
-      prefs.edit().putString(PedoListener.PEDOMETER_IS_COUNTING_PREF_STRING, pedometerIsCounting).apply();
+      prefs.edit().putString(PedoListener.PEDOMETER_IS_COUNTING_TEXT, pedometerIsCounting).apply();
     }
     if (stepsToGo != null) {
-      prefs.edit().putString(PedoListener.STEPS_TO_GO_PREF_STRING, stepsToGo).apply();
+      prefs.edit().putString(PedoListener.PEDOMETER_STEPS_TO_GO_FORMAT_TEXT, stepsToGo).apply();
     }
     if (yourProgress != null) {
-      prefs.edit().putString(PedoListener.YOUR_PROGRESS_PREF_STRING, yourProgress).apply();
+      prefs.edit().putString(PedoListener.PEDOMETER_YOUR_PROGRESS_FORMAT_TEXT, yourProgress).apply();
     }
     if (goalReached != null) {
-      prefs.edit().putString(PedoListener.GOAL_REACHED_PREF_STRING, goalReached).apply();
+      prefs.edit().putString(PedoListener.PEDOMETER_GOAL_REACHED_FORMAT_TEXT, goalReached).apply();
     }
-   }
+  }
 
   private void setGoal(JSONArray args) {
     try {
-      this.goal = args.getInt(0);
+      goal = args.getInt(0);
     }
     catch (JSONException e) {
       e.printStackTrace();
       return;
     }
 
-    SharedPreferences prefs = this.cordova.getContext().getSharedPreferences("pedometer", Context.MODE_PRIVATE);
-    if (this.goal > 0) {
-      prefs.edit().putInt(PedoListener.GOAL_PREF_INT, this.goal).apply();
+    SharedPreferences prefs = cordova.getContext().getSharedPreferences("pedometer", Context.MODE_PRIVATE);
+    if (goal > 0) {
+      prefs.edit().putInt(PedoListener.GOAL_PREF_INT, goal).apply();
     }
   }
 
@@ -270,7 +258,7 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
   }
 
   public void onPause(boolean multitasking) {
-    this.status = PedoListener.PAUSED;
+    status = PedoListener.PAUSED;
     uninitSensor();
   }
 
@@ -290,14 +278,36 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
     Log.i("TAG", "onReset");
   }
 
-  private void start() {
+  private void start(JSONArray args) throws JSONException {
+    startOffset = args.getInt(0);
+    final JSONObject options = args.getJSONObject(1);
+
     // If already starting or running, then return
-    if ((this.status == PedoListener.RUNNING) || (this.status == PedoListener.STARTING)) {
+    if ((status == PedoListener.RUNNING) || (status == PedoListener.STARTING)) {
       return;
     }
 
-    this.cordova.getContext().getSharedPreferences("pedometer", Context.MODE_PRIVATE).edit()
-            .putInt("startOffset", this.startOffset).commit();
+    // Set options
+    SharedPreferences prefs =
+      getActivity().getSharedPreferences("pedometer", Context.MODE_PRIVATE);
+
+    if (options.has(PEDOMETER_GOAL_REACHED_FORMAT_TEXT)) {
+      prefs.edit().putString(PEDOMETER_GOAL_REACHED_FORMAT_TEXT, options.getString(PEDOMETER_GOAL_REACHED_FORMAT_TEXT)).commit();
+    }
+
+    if (options.has(PEDOMETER_IS_COUNTING_TEXT)) {
+      prefs.edit().putString(PEDOMETER_IS_COUNTING_TEXT, options.getString(PEDOMETER_IS_COUNTING_TEXT)).commit();
+    }
+
+    if (options.has(PEDOMETER_STEPS_TO_GO_FORMAT_TEXT)) {
+      prefs.edit().putString(PEDOMETER_STEPS_TO_GO_FORMAT_TEXT, options.getString(PEDOMETER_STEPS_TO_GO_FORMAT_TEXT)).commit();
+    }
+
+    if (options.has(PEDOMETER_YOUR_PROGRESS_FORMAT_TEXT)) {
+      prefs.edit().putString(PEDOMETER_YOUR_PROGRESS_FORMAT_TEXT, options.getString(PEDOMETER_YOUR_PROGRESS_FORMAT_TEXT)).commit();
+    }
+
+    prefs.edit().putInt("startOffset", startOffset).commit();
 
     if (Build.VERSION.SDK_INT >= 26) {
       API26Wrapper.startForegroundService(getActivity(),
@@ -310,7 +320,7 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
   }
 
   private void stop() {
-    if (this.status != PedoListener.STOPPED) {
+    if (status != PedoListener.STOPPED) {
       uninitSensor();
     }
 
@@ -319,15 +329,15 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
     db.close();
 
     getActivity().stopService(new Intent(getActivity(), SensorListener.class));
-    this.status = PedoListener.STOPPED;
+    status = PedoListener.STOPPED;
 
     callbackContext.success();
   }
 
   private void initSensor() {
     // If already starting or running, then return
-    if ((this.status == PedoListener.RUNNING) || (this.status == PedoListener.STARTING)
-      && this.status != PedoListener.PAUSED) {
+    if ((status == PedoListener.RUNNING) || (status == PedoListener.STARTING)
+      && status != PedoListener.PAUSED) {
       return;
     }
 
@@ -338,13 +348,13 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
     SharedPreferences prefs =
       getActivity().getSharedPreferences("pedometer", Context.MODE_PRIVATE);
 
-    this.goal = prefs.getInt(PedoListener.GOAL_PREF_INT, PedoListener.DEFAULT_GOAL);
+    goal = prefs.getInt(PedoListener.GOAL_PREF_INT, PedoListener.DEFAULT_GOAL);
     since_boot = db.getCurrentSteps();
     int pauseDifference = since_boot - prefs.getInt("pauseCount", since_boot);
 
     // register a sensor listener to live update the UI if a step is taken
-    this.sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-    this.sensor = this.sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+    sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+    sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
     if (sensor == null) {
       new AlertDialog.Builder(getActivity()).setTitle("R.string.no_sensor")
         .setMessage("R.string.no_sensor_explain")
@@ -360,7 +370,7 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
         }
       }).create().show();
     } else {
-      this.sensorManager.registerListener(this, this.sensor, SensorManager.SENSOR_DELAY_UI, 0);
+      sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI, 0);
     }
 
     since_boot -= pauseDifference;
@@ -370,42 +380,42 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
 
     db.close();
 
-    this.status = PedoListener.STARTING;
+    status = PedoListener.STARTING;
 
     updateUI();
   }
 
   private void uninitSensor() {
     try {
-      this.sensorManager.unregisterListener(this);
+      sensorManager.unregisterListener(this);
     } catch (Exception e) {
       e.printStackTrace();
     }
     Database db = Database.getInstance(getActivity());
-    db.saveCurrentSteps(this.since_boot);
+    db.saveCurrentSteps(since_boot);
     db.close();
   }
 
   @Override
   public void onSensorChanged(final SensorEvent event) {
-    if (this.status == PedoListener.STOPPED) {
+    if (status == PedoListener.STOPPED) {
       return;
     }
-    this.status = PedoListener.RUNNING;
+    status = PedoListener.RUNNING;
 
     if (event.values[0] > Integer.MAX_VALUE || event.values[0] == 0) {
       return;
     }
-    if (this.todayOffset == Integer.MIN_VALUE) {
+    if (todayOffset == Integer.MIN_VALUE) {
       // no values for today
       // we don`t know when the reboot was, so set today`s steps to 0 by
       // initializing them with -STEPS_SINCE_BOOT
-      this.todayOffset = -(int) event.values[0];
+      todayOffset = -(int) event.values[0];
       Database db = Database.getInstance(getActivity());
       db.insertNewDay(Util.getToday(), (int) event.values[0]);
       db.close();
     }
-    this.since_boot = (int) event.values[0];
+    since_boot = (int) event.values[0];
 
     updateUI();
   }
@@ -418,9 +428,9 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
   private void updateUI() {
 
     // Today offset might still be Integer.MIN_VALUE on first start
-    int steps_today = Math.max(this.todayOffset + this.since_boot, 0);
-    int total = this.total_start + steps_today;
-    int average = (this.total_start + steps_today) / total_days;
+    int steps_today = Math.max(todayOffset + since_boot, 0);
+    int total = total_start + steps_today;
+    int average = (total_start + steps_today) / total_days;
 
     JSONObject result = new JSONObject();
 
@@ -432,7 +442,7 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
       e.printStackTrace();
     }
 
-    this.win(result);
+    win(result);
   }
 
   private void win(JSONObject message) {
@@ -464,6 +474,6 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
   }
 
   private Activity getActivity() {
-    return this.cordova.getActivity();
+    return cordova.getActivity();
   }
 }
