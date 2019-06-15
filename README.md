@@ -24,7 +24,7 @@ cordova plugin add https://github.com/achubutkin/cordova-plugin-stepper
 - iOS not supported. Highly recommendation, use a plugin https://github.com/leecrossley/cordova-plugin-pedometer to implement a pedometer on iOS and combine these plugins in your application with platforms conditions.
 
 ## Credits
-Icons (ic_footsteps_silhouette_variant) made by authors from https://www.flaticon.com is licensed by http://creativecommons.org/licenses/by/3.0/
+Icons made by authors from https://www.flaticon.com is licensed by http://creativecommons.org/licenses/by/3.0/
 
 ## License
 
