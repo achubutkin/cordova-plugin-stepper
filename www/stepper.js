@@ -1,5 +1,3 @@
-cordova.define("cordova-plugin-stepper.Stepper", function(require, exports, module) {
-
 var exec = require("cordova/exec");
 
 var Stepper = function () {
@@ -61,6 +59,3 @@ Stepper.prototype.setGoal = function (num, onSuccess, onError) {
 };
 
 module.exports = new Stepper();
-
-
-});
