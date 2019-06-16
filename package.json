@@ -1,57 +1,31 @@
 {
-  "_from": "cordova-plugin-stepper",
-  "_inBundle": false,
-  "_integrity": "sha1-10Imt3/oISY8Nqkx73GFdcJeucQ=",
-  "_location": "/cordova-plugin-stepper",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "tag",
-    "registry": true,
-    "raw": "cordova-plugin-stepper",
-    "name": "cordova-plugin-stepper",
-    "escapedName": "cordova-plugin-stepper",
-    "rawSpec": "",
-    "saveSpec": null,
-    "fetchSpec": "latest"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "bundleDependencies": false,
+  "name": "cordova-plugin-stepper",
+  "version": "0.1.1",
+  "description": "Lightweight pedometer Cordova/Phonegap plugin for Android using the hardware step sensor, with notifications.",
   "cordova": {
     "id": "cordova-plugin-stepper",
     "platforms": [
       "android"
     ]
   },
-  "deprecated": false,
-  "description": "Lightweight pedometer Cordova/Phonegap plugin for Android using the hardware step sensor, with notifications.",
-  "engines": [
-    {
-      "name": "cordova",
-      "version": ">=3.0.0"
-    }
-  ],
-  "homepage": "https://github.com/achubutkin/cordova-plugin-stepper",
-  "keywords": [
-    "cordova",
-    "pedometer",
-    "steps",
-    "distance",
-    "pedestrian",
-    "ecosystem:cordova",
-    "cordova-android"
-  ],
-  "license": "MIT",
-  "name": "cordova-plugin-stepper",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/achubutkin/cordova-plugin-stepper.git"
   },
-  "version": "0.1.1",
+  "keywords": [
+    "cordova",
+    "phonegap",
+    "pedometer",
+    "steps",
+    "distance",
+    "fitness",
+    "cordova-android",
+    "distance"
+  ],
+  "author": "Alexandr Chubutkin",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/achubutkin/cordova-plugin-stepper/issues"
   },
-  "author": "Alexandr Chubutkin, a.chubutkin@gmail.com"
+  "homepage": "https://github.com/achubutkin/cordova-plugin-stepper#readme"
 }
