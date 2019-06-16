@@ -1,6 +1,5 @@
 {
   "_from": "cordova-plugin-stepper",
-  "_id": "cordova-plugin-stepper@0.1.1",
   "_inBundle": false,
   "_integrity": "sha1-10Imt3/oISY8Nqkx73GFdcJeucQ=",
   "_location": "/cordova-plugin-stepper",
@@ -50,5 +49,9 @@
     "type": "git",
     "url": "git+https://github.com/achubutkin/cordova-plugin-stepper.git"
   },
-  "version": "0.1.1"
+  "version": "0.1.1",
+  "bugs": {
+    "url": "https://github.com/achubutkin/cordova-plugin-stepper/issues"
+  },
+  "author": "Alexandr Chubutkin, a.chubutkin@gmail.com"
 }
