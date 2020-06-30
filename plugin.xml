@@ -11,6 +11,17 @@
     <js-module src="www/stepper.js" name="Stepper">
         <clobbers target="stepper" />
     </js-module>
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Pedometer">
+                <param name="ios-package" value="Pedometer" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+        <header-file src="src/ios/Pedometer.h" />
+        <source-file src="src/ios/Pedometer.m" />
+        <framework src="CoreMotion.framework" />
+    </platform>
     <platform name="android">
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <receiver android:name="org.apache.cordova.stepper.BootReceiver">
