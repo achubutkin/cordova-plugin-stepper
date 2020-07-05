@@ -6,13 +6,13 @@
 #import "Cordova/CDV.h"
 #import "Cordova/CDVViewController.h"
 #import "CoreMotion/CoreMotion.h"
-#import "Pedometer.h"
+#import "Stepper.h"
 
-@interface Pedometer ()
+@interface Stepper ()
     @property (nonatomic, strong) CMPedometer *pedometer;
 @end
 
-@implementation Pedometer
+@implementation Stepper
 
 - (CMPedometer*) pedometer {
     if (_pedometer == nil) {
@@ -54,7 +54,7 @@
                 NSDictionary* pedestrianData = @{
                     @"startDate": [NSString stringWithFormat:@"%f", [pedometerData.startDate timeIntervalSince1970] * 1000],
                     @"endDate": [NSString stringWithFormat:@"%f", [pedometerData.endDate timeIntervalSince1970] * 1000],
-                    @"numberOfSteps": [CMPedometer isStepCountingAvailable] && pedometerData.numberOfSteps ? pedometerData.numberOfSteps : [NSNumber numberWithInt:0],
+                    @"steps_today": [CMPedometer isStepCountingAvailable] && pedometerData.numberOfSteps ? pedometerData.numberOfSteps : [NSNumber numberWithInt:0],
                     @"distance": [CMPedometer isDistanceAvailable] && pedometerData.distance ? pedometerData.distance : [NSNumber numberWithInt:0],
                     @"floorsAscended": [CMPedometer isFloorCountingAvailable] && pedometerData.floorsAscended ? pedometerData.floorsAscended : [NSNumber numberWithInt:0],
                     @"floorsDescended": [CMPedometer isFloorCountingAvailable] && pedometerData.floorsDescended ? pedometerData.floorsDescended : [NSNumber numberWithInt:0]

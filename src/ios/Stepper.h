@@ -6,14 +6,14 @@
 #import "Foundation/Foundation.h"
 #import "Cordova/CDV.h"
 
-@interface Pedometer : CDVPlugin
+@interface Stepper : CDVPlugin
 
 - (void) isStepCountingAvailable:(CDVInvokedUrlCommand*)command;
 - (void) isDistanceAvailable:(CDVInvokedUrlCommand*)command;
 - (void) isFloorCountingAvailable:(CDVInvokedUrlCommand*)command;
 
-- (void) startPedometerUpdates:(CDVInvokedUrlCommand*)command;
-- (void) stopPedometerUpdates:(CDVInvokedUrlCommand*)command;
+- (void) startStepperUpdates:(CDVInvokedUrlCommand*)command;
+- (void) stopStepperUpdates:(CDVInvokedUrlCommand*)command;
 
 - (void) queryData:(CDVInvokedUrlCommand*)command;
 

@@ -12,14 +12,18 @@
         <clobbers target="stepper" />
     </js-module>
     <platform name="ios">
+        <preference name="MOTION_USAGE_DESCRIPTION" default="This app needs motion access"/>
+        <config-file target="*-Info.plist" parent="NSMotionUsageDescription">
+            <string>$MOTION_USAGE_DESCRIPTION</string>
+        </config-file>
         <config-file target="config.xml" parent="/*">
-            <feature name="Pedometer">
-                <param name="ios-package" value="Pedometer" />
+            <feature name="Stepper">
+                <param name="ios-package" value="Stepper" />
                 <param name="onload" value="true" />
             </feature>
         </config-file>
-        <header-file src="src/ios/Pedometer.h" />
-        <source-file src="src/ios/Pedometer.m" />
+        <header-file src="src/ios/Stepper.h" />
+        <source-file src="src/ios/Stepper.m" />
         <framework src="CoreMotion.framework" />
     </platform>
     <platform name="android">
